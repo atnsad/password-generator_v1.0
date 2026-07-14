@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Password Generator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #0b0b0f, #12121a);
+      color: #ffffff;
+      font-family: "Vazirmatn", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px 12px 30px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      background: #171720;
+      border: 1px solid #2a2a38;
+      border-radius: 22px;
+      padding: 18px 14px 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .title {
+      margin: 0 0 18px;
+      text-align: center;
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      color: #7ee7ff;
+      text-shadow: 0 0 12px rgba(126, 231, 255, 0.2);
+    }
+
+    .password-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0f0f15;
+      border: 1px solid #2b2b3a;
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 68px;
+    }
+
+    .eye-btn {
+      width: 38px;
+      height: 38px;
+      border: none;
+      background: transparent;
+      padding: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .eye-btn img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .password-text {
+      flex: 1;
+      word-break: break-all;
+      color: #00ff7b;
+      font-size: 1rem;
+      line-height: 1.7;
+      text-align: left;
+      direction: ltr;
+      min-height: 26px;
+    }
+
+    .log-box {
+      margin-top: 10px;
+      background: #111117;
+      border: 1px solid #2b2b3a;
+      border-radius: 14px;
+      min-height: 72px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding: 10px;
+      font-size: 0.88rem;
+      color: #ff4d4d;
+      line-height: 1.7;
+    }
+
+    .section {
+      margin-top: 16px;
+    }
+
+    .section-label {
+      font-size: 0.95rem;
+      color: #c7c7d7;
+      margin-bottom: 10px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #101019;
+      border: 1px solid #2b2b3a;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 0.92rem;
+      color: #f0f0f0;
+    }
+
+    .option-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: #00d084;
+    }
+
+    .range-wrap {
+      margin-top: 10px;
+      background: #101019;
+      border: 1px solid #2b2b3a;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .range-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .range-value {
+      color: #7ee7ff;
+      font-weight: 700;
+      min-width: 34px;
+      text-align: right;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #00d084;
+    }
+
+    .buttons {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      min-height: 48px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+      opacity: 0.92;
+    }
+
+    .btn-copy {
+      background: #3b82f6;
+    }
+
+    .btn-generate {
+      background: #16a34a;
+    }
+
+    .btn-about {
+      background: #7c3aed;
+    }
+
+    .btn-learn {
+      background: #ea580c;
+    }
+
+    @media (max-width: 380px) {
+      .buttons {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1 class="title">PASSWORD GENERATOR</h1>
+
+    <div class="password-box">
+      <button class="eye-btn" id="toggleVisibilityBtn" aria-label="نمایش یا مخفی کردن رمز">
+        <img id="eyeIcon" src="assets/show.png" alt="show password">
+      </button>
+      <div class="password-text" id="passwordText">هنوز رمزی ساخته نشده است</div>
+    </div>
+
+    <div class="log-box" id="logBox">[LOG] برنامه آماده است...</div>
+
+    <div class="section">
+      <div class="section-label">نوع رمز عبور را انتخاب کنید:</div>
+      <div class="options">
+        <label class="option-item">
+          <input type="checkbox" id="includeNumbers" checked>
+          <span>Numbers</span>
+        </label>
+
+        <label class="option-item">
+          <input type="checkbox" id="includeUppercase" checked>
+          <span>Capital Letters</span>
+        </label>
+
+        <label class="option-item">
+          <input type="checkbox" id="includeLowercase" checked>
+          <span>Small Letters</span>
+        </label>
+
+        <label class="option-item">
+          <input type="checkbox" id="includeSymbols" checked>
+          <span>Symbols</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="range-wrap">
+        <div class="range-header">
+          <span>طول رمز عبور</span>
+          <span class="range-value" id="lengthValue">12</span>
+        </div>
+        <input type="range" id="passwordLength" min="4" max="48" value="12">
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn btn-copy" id="copyBtn">Copy</button>
+      <button class="btn btn-generate" id="generateBtn">Generate</button>
+      <button class="btn btn-about" id="aboutBtn">About</button>
+      <button class="btn btn-learn" id="learnBtn">tutorial</button>
+    </div>
+  </div>
+
+  <script>
+    const passwordText = document.getElementById("passwordText");
+    const logBox = document.getElementById("logBox");
+    const generateBtn = document.getElementById("generateBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const aboutBtn = document.getElementById("aboutBtn");
+    const learnBtn = document.getElementById("learnBtn");
+    const toggleVisibilityBtn = document.getElementById("toggleVisibilityBtn");
+    const eyeIcon = document.getElementById("eyeIcon");
+    const passwordLength = document.getElementById("passwordLength");
+    const lengthValue = document.getElementById("lengthValue");
+
+    const includeNumbers = document.getElementById("includeNumbers");
+    const includeUppercase = document.getElementById("includeUppercase");
+    const includeLowercase = document.getElementById("includeLowercase");
+    const includeSymbols = document.getElementById("includeSymbols");
+
+    let currentPassword = "";
+    let isVisible = false;
+
+    function addLog(message) {
+      const time = new Date().toLocaleTimeString("fa-IR");
+      logBox.innerHTML += `<br>[${time}] ${message}`;
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function updateLengthLabel() {
+      lengthValue.textContent = passwordLength.value;
+    }
+
+    function getMaskedPassword(password) {
+      return "*".repeat(password.length);
+    }
+
+    function updatePasswordView() {
+      if (!currentPassword) {
+        passwordText.textContent = "هنوز رمزی ساخته نشده است";
+        toggleVisibilityBtn.style.display = "none";
+        return;
+      }
+
+      toggleVisibilityBtn.style.display = "flex";
+
+      if (isVisible) {
+        passwordText.textContent = currentPassword;
+        eyeIcon.src = "assets/dontshow.png";
+        eyeIcon.alt = "hide password";
+      } else {
+        passwordText.textContent = getMaskedPassword(currentPassword);
+        eyeIcon.src = "assets/show.png";
+        eyeIcon.alt = "show password";
+      }
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function getRandomChar(chars) {
+      return chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    function generatePassword() {
+      const length = parseInt(passwordLength.value, 10);
+
+      const sets = [];
+      if (includeNumbers.checked) sets.push("0123456789");
+      if (includeUppercase.checked) sets.push("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+      if (includeLowercase.checked) sets.push("abcdefghijklmnopqrstuvwxyz");
+      if (includeSymbols.checked) sets.push("!@#$%^&*()_+-=[]{}|;:,.<>?/");
+
+      if (sets.length === 0) {
+        addLog("خطا: حداقل یک نوع کاراکتر را انتخاب کنید.");
+        currentPassword = "";
+        isVisible = false;
+        updatePasswordView();
+        return;
+      }
+
+      let allChars = sets.join("");
+      let passwordArray = [];
+
+      // تضمین می‌کند از هر دسته انتخاب‌شده حداقل یک کاراکتر وجود داشته باشد.
+      for (const set of sets) {
+        passwordArray.push(getRandomChar(set));
+      }
+
+      while (passwordArray.length < length) {
+        passwordArray.push(getRandomChar(allChars));
+      }
+
+      shuffleArray(passwordArray);
+      currentPassword = passwordArray.join("").slice(0, length);
+      isVisible = false;
+      updatePasswordView();
+
+      addLog("رمز عبور جدید با موفقیت ساخته شد.");
+    }
+
+    async function copyPassword() {
+      if (!currentPassword) {
+        addLog("هیچ رمزی برای کپی وجود ندارد.");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(currentPassword);
+        addLog("رمز عبور کپی شد.");
+      } catch (error) {
+        addLog("کپی کردن رمز ناموفق بود.");
+      }
+    }
+
+    passwordLength.addEventListener("input", () => {
+      updateLengthLabel();
+      addLog(`طول رمز روی ${passwordLength.value} تنظیم شد.`);
+    });
+
+    toggleVisibilityBtn.addEventListener("click", () => {
+      if (!currentPassword) return;
+
+      isVisible = !isVisible;
+      updatePasswordView();
+
+      if (isVisible) {
+        addLog("رمز عبور نمایش داده شد.");
+      } else {
+        addLog("رمز عبور مخفی شد.");
+      }
+    });
+
+    generateBtn.addEventListener("click", generatePassword);
+    copyBtn.addEventListener("click", copyPassword);
+
+    aboutBtn.addEventListener("click", () => {
+      addLog("ورود به بخش about");
+      window.open("about/about.html", "_blank");
+    });
+
+    learnBtn.addEventListener("click", () => {
+      addLog("ورود به بخش آموزش");
+      window.open("tutorial/tutorial.html", "_blank");
+    });
+
+    [
+      includeNumbers,
+      includeUppercase,
+      includeLowercase,
+      includeSymbols
+    ].forEach(item => {
+      item.addEventListener("change", () => {
+        addLog(`تنظیمات رمز عبور تغییر کرد.`);
+      });
+    });
+
+    updateLengthLabel();
+  </script>
+</body>
+</html>
